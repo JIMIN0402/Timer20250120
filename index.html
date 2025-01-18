@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown Timer</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: "Segoe UI", Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .timer {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="timer" id="timer1">00:00:00</div>
+    <div class="timer" id="timer2">0</div>
+
+    <script>
+        const targetTime = new Date("2025-01-20T08:00:00+09:00"); // 목표 시간 (UTC+9)
+
+        function updateTimer() {
+            const now = new Date(); // 현재 시간 (브라우저 시간, 기본적으로 UTC+9)
+            const remainingTime = targetTime - now; // 남은 시간 계산 (밀리초 단위)
+
+            // 콘솔 로그로 남은 시간을 확인
+            console.log("현재 시간:", now);
+            console.log("목표 시간:", targetTime);
+            console.log("남은 시간:", remainingTime);
+
+            if (remainingTime <= 0) {
+                document.getElementById('timer1').innerText = "시간 종료";
+                document.getElementById('timer2').innerText = "시간 종료";
+                clearInterval(timerInterval); // 타이머 정지
+            } else {
+                // 시간 계산 (시, 분, 초)
+                const hours = Math.floor(remainingTime / (1000 * 60 * 60));
+                const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
+
+                // 첫 번째 타이머 (HH:mm:ss 형식)
+                document.getElementById('timer1').innerText = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+
+                // 두 번째 타이머 (#,### 형식)
+                const formattedSeconds = new Intl.NumberFormat().format(Math.floor(remainingTime / 1000)); // 초 단위로 변환 후 포맷
+                document.getElementById('timer2').innerText = formattedSeconds;
+            }
+        }
+
+        // 1초마다 updateTimer 함수 실행
+        const timerInterval = setInterval(updateTimer, 1000);
+    </script>
+
+</body>
+</html>
